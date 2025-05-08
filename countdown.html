@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Countdown</title>
+    <script src="/tailwind.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/date-fns/2.30.0/date-fns.min.js"></script>
+    <style>
+      .countdown {
+        font-size: 8rem;
+        font-weight: bold;
+        color: white;
+        text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        letter-spacing: 0.2em;
+      }
+      .label {
+        font-size: 1.5rem;
+        color: white;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-top: 1rem;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-900 text-white min-h-screen overflow-hidden">
+    <div
+      class="min-h-screen bg-gray-900/50 flex flex-col items-center justify-between py-3 relative"
+    >
+      <canvas
+        id="animated-background"
+        class="fixed inset-0 w-full h-full"
+      ></canvas>
+      <div class="flex-1 flex items-center relative z-10">
+        <div class="text-center space-y-8 p-4">
+          <div class="p-8 rounded-lg w-full">
+            <div class="flex justify-center items-center gap-2 mb-2">
+              <div
+                id="hours-display"
+                class="hidden text-[15vw] font-semibold tracking-normal text-white w-[15vw] text-center"
+              >
+                00
+              </div>
+              <div
+                id="hours-colon"
+                class="hidden text-[15vw] font-semibold tracking-normal text-white"
+              >
+                :
+              </div>
+              <div
+                id="minutes-display"
+                class="text-[15vw] font-semibold tracking-normal text-white w-[15vw] text-center"
+              >
+                00
+              </div>
+              <div
+                class="text-[15vw] font-semibold tracking-normal text-white"
+              >
+                :
+              </div>
+              <div
+                id="seconds-display"
+                class="text-[15vw] font-semibold tracking-normal text-white w-[15vw] text-center"
+              >
+                00
+              </div>
+            </div>
+            <div
+              id="current-time"
+              class="text-[2.4vw] font-medium text-gray-500 tracking-wider -mt-3"
+            ></div>
+          </div>
+        </div>
+      </div>
+      <div class="text-center px-4 pb-4 relative z-10">
+        <div class="font-medium tracking-wider lg:text-[2vw] sm:text-base">
+          GODMAN NETWORK: RAISING THE GOD-KIND OF MEN
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const canvas = document.getElementById("animated-background");
+      const ctx = canvas.getContext("2d");
+
+      // Set canvas size
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      resizeCanvas();
+      window.addEventListener("resize", resizeCanvas);
+
+      // Shape class for floating elements
+      class Shape {
+        constructor() {
+          this.reset();
+        }
+
+        reset() {
+          this.x = Math.random() * canvas.width;
+          this.y = Math.random() * canvas.height;
+          this.size = Math.random() * 80 + 40; // Keeping the same large size
+          this.speedX = (Math.random() - 0.5) * 1.5; // Even faster movement
+          this.speedY = (Math.random() - 0.5) * 1.5; // Even faster movement
+          this.opacity = Math.random() * 0.15 + 0.05;
+        }
+
+        update() {
+          this.x += this.speedX;
+          this.y += this.speedY;
+
+          // Wrap around screen
+          if (this.x < -this.size) this.x = canvas.width + this.size;
+          if (this.x > canvas.width + this.size) this.x = -this.size;
+          if (this.y < -this.size) this.y = canvas.height + this.size;
+          if (this.y > canvas.height + this.size) this.y = -this.size;
+        }
+
+        draw() {
+          ctx.save();
+          ctx.globalAlpha = this.opacity;
+
+          const gradient = ctx.createRadialGradient(
+            this.x,
+            this.y,
+            0,
+            this.x,
+            this.y,
+            this.size
+          );
+          gradient.addColorStop(0, "rgba(255, 255, 255, 0.8)");
+          gradient.addColorStop(0.5, "rgba(255, 255, 255, 0.15)");
+          gradient.addColorStop(1, "rgba(255, 255, 255, 0)");
+
+          ctx.fillStyle = gradient;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.restore();
+        }
+      }
+
+      // Create shapes - fewer circles due to larger size
+      const shapes = Array.from({ length: 10 }, () => new Shape());
+
+      // Background gradient - darker colors
+      function drawBackground() {
+        const gradient = ctx.createLinearGradient(
+          0,
+          0,
+          canvas.width,
+          canvas.height
+        );
+        gradient.addColorStop(0, "#0a0a1a"); // Darker navy
+        gradient.addColorStop(0.5, "#0d1128"); // Darker blue
+        gradient.addColorStop(1, "#070b1a"); // Darkest blue
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
+
+      function animate() {
+        drawBackground();
+
+        // Update and draw shapes
+        shapes.forEach((shape) => {
+          shape.update();
+          shape.draw();
+        });
+
+        requestAnimationFrame(animate);
+      }
+
+      animate();
+
+      // Timer Logic
+      function formatTime(seconds) {
+        if (seconds <= 0) return { hours: "00", minutes: "00", seconds: "00" };
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const secs = seconds % 60;
+        return {
+          hours: hours.toString().padStart(2, "0"),
+          minutes: minutes.toString().padStart(2, "0"),
+          seconds: secs.toString().padStart(2, "0"),
+        };
+      }
+
+      function startCountdown() {
+        const endTimeStr = localStorage.getItem("countdownEndTime");
+        if (!endTimeStr) {
+          window.location.href = "setup.html";
+          return;
+        }
+
+        const endTime = parseInt(endTimeStr);
+        const updateTimer = () => {
+          const now = Date.now();
+          const remaining = Math.max(0, Math.floor((endTime - now) / 1000));
+          const formatted = formatTime(remaining);
+
+          document.getElementById("hours-display").textContent =
+            formatted.hours;
+          document.getElementById("minutes-display").textContent =
+            formatted.minutes;
+          document.getElementById("seconds-display").textContent =
+            formatted.seconds;
+
+          if (formatted.hours === "00") {
+            document.getElementById("hours-display").classList.add("hidden");
+            document.getElementById("hours-colon").classList.add("hidden");
+          } else {
+            document.getElementById("hours-display").classList.remove("hidden");
+            document.getElementById("hours-colon").classList.remove("hidden");
+          }
+
+          if (remaining <= 0) {
+            localStorage.removeItem("countdownEndTime");
+            window.location.href = "setup.html";
+            clearInterval(intervalId);
+          }
+        };
+
+        updateTimer();
+        const intervalId = setInterval(updateTimer, 1000);
+
+        // Current time display
+        const updateCurrentTime = () => {
+          const now = new Date();
+          const hours = now.getHours() % 12 || 12; // Convert to 12-hour format
+          const minutes = now.getMinutes().toString().padStart(2, "0");
+          const ampm = now.getHours() >= 12 ? "PM" : "AM";
+          document.getElementById(
+            "current-time"
+          ).textContent = `${hours}:${minutes} ${ampm}`;
+        };
+        updateCurrentTime();
+        setInterval(updateCurrentTime, 1000);
+      }
+
+      // Start countdown if end time exists
+      startCountdown();
+    </script>
+  </body>
+</html>
