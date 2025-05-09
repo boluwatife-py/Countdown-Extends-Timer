@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Countdown</title>
     <script src="/tailwind.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/date-fns/2.30.0/date-fns.min.js"></script>
     <style>
       .countdown {
         font-size: 8rem;
@@ -34,7 +33,7 @@
       <div class="flex-1 flex items-center relative z-10">
         <div class="text-center space-y-8 p-4">
           <div class="p-8 rounded-lg w-full">
-            <div class="flex justify-center items-center gap-2 mb-2">
+            <div class="flex justify-center items-center gap-4 mb-2">
               <div
                 id="hours-display"
                 class="hidden text-[15vw] font-semibold tracking-normal text-white w-[15vw] text-center"
@@ -190,7 +189,12 @@
       function startCountdown() {
         const endTimeStr = localStorage.getItem("countdownEndTime");
         if (!endTimeStr) {
-          window.location.href = "setup.html";
+          // Show "00" for all time units when no time is set
+          document.getElementById("hours-display").textContent = "00";
+          document.getElementById("minutes-display").textContent = "00";
+          document.getElementById("seconds-display").textContent = "00";
+          document.getElementById("hours-display").classList.add("hidden");
+          document.getElementById("hours-colon").classList.add("hidden");
           return;
         }
 
@@ -216,8 +220,13 @@
           }
 
           if (remaining <= 0) {
+            // Show "00" for all time units when time is up
+            document.getElementById("hours-display").textContent = "00";
+            document.getElementById("minutes-display").textContent = "00";
+            document.getElementById("seconds-display").textContent = "00";
+            document.getElementById("hours-display").classList.add("hidden");
+            document.getElementById("hours-colon").classList.add("hidden");
             localStorage.removeItem("countdownEndTime");
-            window.location.href = "setup.html";
             clearInterval(intervalId);
           }
         };

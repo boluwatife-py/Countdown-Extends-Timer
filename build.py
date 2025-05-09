@@ -25,7 +25,7 @@ add_data_args = []
 for file in files_to_include:
     add_data_args.extend(['--add-data', f'{file};.'])
 
-# Run PyInstaller
+
 try:
     PyInstaller.__main__.run([
         os.path.join(current_dir, 'server.py'),
