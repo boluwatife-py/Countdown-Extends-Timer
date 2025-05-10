@@ -1,0 +1,9 @@
+#include "resource.h"
+#include <windows.h>
+
+IDR_SETUP_HTML RCDATA "setup.html"
+IDR_COUNTDOWN_HTML RCDATA "countdown.html"
+IDR_TAILWIND_JS RCDATA "tailwind.js"
+IDR_ICON_ICO ICON "icon.ico"
+
+IDI_ICON1 ICON "icon.ico"

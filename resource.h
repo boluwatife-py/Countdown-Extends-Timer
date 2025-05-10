@@ -1,0 +1,6 @@
+#pragma once
+#define IDR_SETUP_HTML 101
+#define IDR_COUNTDOWN_HTML 102
+#define IDR_TAILWIND_JS 103
+#define IDR_ICON_ICO 104
+#define IDI_ICON1 101
