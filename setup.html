@@ -155,9 +155,53 @@
 
             <button
               onclick="startCustom()"
-              class="w-full py-3 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all flex items-center justify-center space-x-2"
+              class="w-full py-3 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all flex items-center justify-center space-x-2 mb-4"
             >
-              <span>Start Countdown</span>
+              <span>Start Countdown (Duration)</span>
+              <svg
+                class="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 5l7 7-7 7"
+                ></path>
+              </svg>
+            </button>
+
+            <div class="relative mt-8">
+              <div class="absolute inset-0 flex items-center">
+                <div class="w-full border-t border-gray-700"></div>
+              </div>
+              <div class="relative flex justify-center text-xs uppercase">
+                <span class="px-2 bg-gray-800 text-gray-400 tracking-wider"
+                  >Countdown to a Specific Time</span
+                >
+              </div>
+            </div>
+
+            <div class="flex flex-col items-center gap-4 mb-4 mt-4">
+              <div class="space-y-1.5 w-full">
+                <label class="block text-sm font-medium text-gray-400" for="target-time">
+                  Select Time
+                </label>
+                <input
+                  id="target-time"
+                  type="time"
+                  class="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-center text-2xl font-mono focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all text-white"
+                />
+              </div>
+            </div>
+
+            <button
+              onclick="startCountdownToTime()"
+              class="w-full py-3 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all flex items-center justify-center space-x-2"
+            >
+              <span>Start Countdown (To Time)</span>
               <svg
                 class="w-4 h-4"
                 fill="none"
@@ -204,6 +248,37 @@
         }
       }
 
+      function startCountdownToTime() {
+        const timeValue = document.getElementById("target-time").value;
+        if (!timeValue) return;
+        const [targetHours, targetMinutes] = timeValue.split(":").map(Number);
+        const now = new Date();
+        const target = new Date(now);
+        target.setHours(targetHours, targetMinutes, 0, 0);
+        if (target <= now) {
+          // If the selected time is earlier than now, set for next day
+          target.setDate(target.getDate() + 1);
+        }
+        const totalSeconds = Math.floor((target - now) / 1000);
+        if (totalSeconds > 0) {
+          const endTime = Date.now() + totalSeconds * 1000;
+          localStorage.setItem("countdownEndTime", endTime.toString());
+          window.location.href = "/countdown";
+        }
+      }
+
+      // Add current time display
+      function updateCurrentTime() {
+        const now = new Date();
+        const hours = now.getHours() % 12 || 12; // Convert to 12-hour format
+        const minutes = now.getMinutes().toString().padStart(2, "0");
+        const seconds = now.getSeconds().toString().padStart(2, "0");
+        const ampm = now.getHours() >= 12 ? "PM" : "AM";
+        document.getElementById("current-time").textContent = `${hours}:${minutes}:${seconds} ${ampm}`;
+      }
+      updateCurrentTime();
+      setInterval(updateCurrentTime, 1000);
+
       document
         .querySelectorAll('input[inputmode="numeric"]')
         .forEach((input) => {
@@ -220,18 +295,6 @@
             }
           });
         });
-
-      // Add current time display
-      function updateCurrentTime() {
-        const now = new Date();
-        const hours = now.getHours() % 12 || 12; // Convert to 12-hour format
-        const minutes = now.getMinutes().toString().padStart(2, "0");
-        const seconds = now.getSeconds().toString().padStart(2, "0");
-        const ampm = now.getHours() >= 12 ? "PM" : "AM";
-        document.getElementById("current-time").textContent = `${hours}:${minutes}:${seconds} ${ampm}`;
-      }
-      updateCurrentTime();
-      setInterval(updateCurrentTime, 1000);
     </script>
   </body>
 </html>
