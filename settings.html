@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Timer Settings</title>
+  <script src="/tailwind.js"></script>
+</head>
+
+<body class="bg-gray-900 text-white min-h-screen flex flex-col">
+  <div class="flex-1 flex items-center justify-center p-4">
+    <div class="w-full max-w-lg space-y-6">
+      <div class="text-center space-y-2">
+        <h1 class="text-2xl font-semibold tracking-tight">Timer Settings</h1>
+        <p class="text-sm text-gray-400">
+          Customize your timer display and appearance
+        </p>
+      </div>
+
+      <div class="bg-gray-800/50 backdrop-blur-sm shadow-lg rounded-xl p-6 border border-gray-700">
+        <div class="space-y-6">
+          <!-- Background Animation Selection -->
+          <div class="space-y-3">
+            <label class="block text-sm font-medium text-gray-400">
+              Background Animation
+            </label>
+            <select id="background-animation"
+              class="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all">
+              <option value="floating-shapes">Floating Shapes (Default)</option>
+              <option value="particle-network">Particle Network</option>
+              <option value="gradient-flow">Gradient Flow</option>
+              <option value="minimal-dots">Minimal Dots</option>
+              <option value="matrix-rain">Matrix Rain</option>
+              <option value="fireflies">Fireflies</option>
+              <option value="waves">Waves</option>
+              <option value="spiral-galaxy">Spiral Galaxy</option>
+              <option value="bouncing-orbs">Bouncing Orbs</option>
+              <option value="nebula-glow">Nebula Glow</option>
+            </select>
+          </div>
+
+          <!-- Bottom Label Text -->
+          <div class="space-y-3">
+            <label class="block text-sm font-medium text-gray-400">   
+              Bottom Label Text
+            </label>
+            <input id="bottom-label" type="text" placeholder="Enter your custom label"
+              class="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all" />
+          </div>
+
+          <!-- Current Time Toggle -->
+          <div class="flex items-center justify-between">
+            <label class="text-sm font-medium text-gray-400">
+              Show Current Time
+            </label>
+            <button id="current-time-toggle"
+              class="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900"
+              role="switch" aria-checked="true">
+              <span
+                class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform translate-x-6"></span>
+            </button>
+          </div>
+
+          <!-- Save Button -->
+          <button onclick="saveSettings()"
+            class="w-full py-3 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all flex items-center justify-center space-x-2">
+            <span>Save Settings</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Navigation Buttons -->
+      <div class="flex justify-center space-x-4">
+        <a href="/setup" class="px-4 py-2 text-sm font-medium text-gray-400 hover:text-white transition-colors">
+          Back to Setup
+        </a>
+        <a href="/countdown" class="px-4 py-2 text-sm font-medium text-gray-400 hover:text-white transition-colors">
+          View Timer
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Load saved settings
+    function loadSettings() {
+      const settings = JSON.parse(localStorage.getItem('timerSettings') || '{}');
+
+      // Set background animation
+      const backgroundSelect = document.getElementById('background-animation');
+      backgroundSelect.value = settings.backgroundAnimation || 'floating-shapes';
+
+      // Set bottom label
+      const bottomLabel = document.getElementById('bottom-label');
+      bottomLabel.value = settings.bottomLabel || 'GODMAN NETWORK: RAISING THE GOD-KIND OF MEN';
+
+      // Set current time toggle
+      const currentTimeToggle = document.getElementById('current-time-toggle');
+      const showCurrentTime = settings.showCurrentTime !== false; // Default to true
+      currentTimeToggle.setAttribute('aria-checked', showCurrentTime);
+      currentTimeToggle.classList.toggle('bg-blue-600', showCurrentTime);
+      currentTimeToggle.classList.toggle('bg-gray-700', !showCurrentTime);
+      currentTimeToggle.querySelector('span').classList.toggle('translate-x-6', showCurrentTime);
+      currentTimeToggle.querySelector('span').classList.toggle('translate-x-1', !showCurrentTime);
+    }
+
+    // Toggle current time display
+    document.getElementById('current-time-toggle').addEventListener('click', function () {
+      const isChecked = this.getAttribute('aria-checked') === 'true';
+      this.setAttribute('aria-checked', !isChecked);
+      this.classList.toggle('bg-blue-600', !isChecked);
+      this.classList.toggle('bg-gray-700', isChecked);
+      this.querySelector('span').classList.toggle('translate-x-6', !isChecked);
+      this.querySelector('span').classList.toggle('translate-x-1', isChecked);
+    });
+
+    // Save settings
+    function saveSettings() {
+      const settings = {
+        backgroundAnimation: document.getElementById('background-animation').value,
+        bottomLabel: document.getElementById('bottom-label').value,
+        showCurrentTime: document.getElementById('current-time-toggle').getAttribute('aria-checked') === 'true'
+      };
+
+      localStorage.setItem('timerSettings', JSON.stringify(settings));
+
+      // Show success message
+      const button = document.querySelector('button[onclick="saveSettings()"]');
+      const originalText = button.innerHTML;
+      button.innerHTML = `
+          <span>Settings Saved!</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+        `;
+      button.classList.add('bg-green-600', 'hover:bg-green-700');
+      button.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+
+      setTimeout(() => {
+        button.innerHTML = originalText;
+        button.classList.remove('bg-green-600', 'hover:bg-green-700');
+        button.classList.add('bg-blue-600', 'hover:bg-blue-700');
+      }, 2000);
+    }
+
+    // Load settings when page loads
+    document.addEventListener('DOMContentLoaded', loadSettings);
+  </script>
+</body>
+
+</html>

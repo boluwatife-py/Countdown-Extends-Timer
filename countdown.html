@@ -1,255 +1,616 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Countdown</title>
-    <script src="/tailwind.js"></script>
-    <style>
-      .countdown {
-        font-size: 8rem;
-        font-weight: bold;
-        color: white;
-        text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
-        letter-spacing: 0.2em;
-      }
-      .label {
-        font-size: 1.5rem;
-        color: white;
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        margin-top: 1rem;
-      }
-    </style>
-  </head>
-  <body class="bg-gray-900 text-white min-h-screen overflow-hidden">
-    <div
-      class="min-h-screen bg-gray-900/50 flex flex-col items-center justify-between py-3 relative"
-    >
-      <canvas
-        id="animated-background"
-        class="fixed inset-0 w-full h-full"
-      ></canvas>
-      <div class="flex-1 flex items-center relative z-10">
-        <div class="text-center space-y-8 p-4">
-          <div class="p-8 rounded-lg w-full">
-            <div class="flex justify-center items-center gap-4 mb-2">
-              <div
-                id="hours-display"
-                class="hidden text-[15vw] font-semibold tracking-normal text-white w-[15vw] text-center"
-              >
-                00
-              </div>
-              <div
-                id="hours-colon"
-                class="hidden text-[15vw] font-semibold tracking-normal text-white"
-              >
-                :
-              </div>
-              <div
-                id="minutes-display"
-                class="text-[15vw] font-semibold tracking-normal text-white w-[15vw] text-center"
-              >
-                00
-              </div>
-              <div
-                class="text-[15vw] font-semibold tracking-normal text-white"
-              >
-                :
-              </div>
-              <div
-                id="seconds-display"
-                class="text-[15vw] font-semibold tracking-normal text-white w-[15vw] text-center"
-              >
-                00
-              </div>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Countdown</title>
+  <script src="/tailwind.js"></script>
+  <style>
+    .countdown {
+      font-size: 8rem;
+      font-weight: bold;
+      color: white;
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+      letter-spacing: 0.2em;
+    }
+
+    .label {
+      font-size: 1.5rem;
+      color: white;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-900 text-white min-h-screen overflow-hidden">
+  <div class="min-h-screen bg-gray-900/50 flex flex-col items-center justify-between py-3 relative">
+    <canvas id="animated-background" class="fixed inset-0 w-full h-full"></canvas>
+    <div class="flex-1 flex items-center relative z-10">
+      <div class="text-center space-y-8 p-4">
+        <div class="p-8 rounded-lg w-full">
+          <div class="flex justify-center items-center gap-4 mb-2">
+            <div id="hours-display"
+              class="hidden text-[15vw] font-semibold tracking-normal text-white w-[15vw] text-center">
+              00
             </div>
-            <div
-              id="current-time"
-              class="text-[2.4vw] font-medium text-gray-500 tracking-wider -mt-3"
-            ></div>
+            <div id="hours-colon" class="hidden text-[15vw] font-semibold tracking-normal text-white">
+              :
+            </div>
+            <div id="minutes-display" class="text-[15vw] font-semibold tracking-normal text-white w-[15vw] text-center">
+              00
+            </div>
+            <div class="text-[15vw] font-semibold tracking-normal text-white">
+              :
+            </div>
+            <div id="seconds-display" class="text-[15vw] font-semibold tracking-normal text-white w-[15vw] text-center">
+              00
+            </div>
           </div>
-        </div>
-      </div>
-      <div class="text-center px-4 pb-4 relative z-10">
-        <div class="font-medium tracking-wider lg:text-[2vw] sm:text-base">
-          GODMAN NETWORK: RAISING THE GOD-KIND OF MEN
+          <div id="current-time" class="text-[2.4vw] font-medium text-gray-500 tracking-wider -mt-3"></div>
         </div>
       </div>
     </div>
+    <div class="text-center px-4 pb-4 relative z-10">
+      <div class="font-medium tracking-wider lg:text-[2vw] sm:text-base" id="bottomLabel">
+        GODMAN NETWORK: RAISING THE GOD-KIND OF MEN
+      </div>
+    </div>
+  </div>
 
-    <script>
-      const canvas = document.getElementById("animated-background");
-      const ctx = canvas.getContext("2d");
+  <script>
+    // Load settings
+    const settings = JSON.parse(localStorage.getItem('timerSettings') || '{}');
 
-      // Set canvas size
-      function resizeCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-      }
-      resizeCanvas();
-      window.addEventListener("resize", resizeCanvas);
+    // Apply bottom label
+    const bottomLabelElement = document.getElementById('bottomLabel');
+    if (bottomLabelElement) {
+      bottomLabelElement.textContent = settings.bottomLabel || 'GODMAN NETWORK: RAISING THE GOD-KIND OF MEN';
+    }
 
-      // Shape class for floating elements
-      class Shape {
-        constructor() {
-          this.reset();
+    const canvas = document.getElementById("animated-background");
+    const ctx = canvas.getContext("2d");
+
+    // Set canvas size
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
+
+    // Background animations
+    const animations = {
+      'floating-shapes': {
+        init: () => {
+          class Shape {
+            constructor() {
+              this.reset();
+            }
+
+            reset() {
+              this.x = Math.random() * canvas.width;
+              this.y = Math.random() * canvas.height;
+              this.size = Math.random() * 80 + 40;
+              this.speedX = (Math.random() - 0.5) * 1.5;
+              this.speedY = (Math.random() - 0.5) * 1.5;
+              this.opacity = Math.random() * 0.15 + 0.05;
+            }
+
+            update() {
+              this.x += this.speedX;
+              this.y += this.speedY;
+
+              if (this.x < -this.size) this.x = canvas.width + this.size;
+              if (this.x > canvas.width + this.size) this.x = -this.size;
+              if (this.y < -this.size) this.y = canvas.height + this.size;
+              if (this.y > canvas.height + this.size) this.y = -this.size;
+            }
+
+            draw() {
+              ctx.save();
+              ctx.globalAlpha = this.opacity;
+
+              const gradient = ctx.createRadialGradient(
+                this.x, this.y, 0,
+                this.x, this.y, this.size
+              );
+              gradient.addColorStop(0, "rgba(255, 255, 255, 0.8)");
+              gradient.addColorStop(0.5, "rgba(255, 255, 255, 0.15)");
+              gradient.addColorStop(1, "rgba(255, 255, 255, 0)");
+
+              ctx.fillStyle = gradient;
+              ctx.beginPath();
+              ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+              ctx.fill();
+
+              ctx.restore();
+            }
+          }
+
+          return Array.from({ length: 10 }, () => new Shape());
+        },
+        draw: (shapes) => {
+          const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+          gradient.addColorStop(0, "#0a0a1a");
+          gradient.addColorStop(0.5, "#0d1128");
+          gradient.addColorStop(1, "#070b1a");
+          ctx.fillStyle = gradient;
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+          shapes.forEach(shape => {
+            shape.update();
+            shape.draw();
+          });
         }
+      },
 
-        reset() {
-          this.x = Math.random() * canvas.width;
-          this.y = Math.random() * canvas.height;
-          this.size = Math.random() * 80 + 40; // Keeping the same large size
-          this.speedX = (Math.random() - 0.5) * 1.5; // Even faster movement
-          this.speedY = (Math.random() - 0.5) * 1.5; // Even faster movement
-          this.opacity = Math.random() * 0.15 + 0.05;
+      'particle-network': {
+        init: () => {
+          class Particle {
+            constructor() {
+              this.reset();
+            }
+
+            reset() {
+              this.x = Math.random() * canvas.width;
+              this.y = Math.random() * canvas.height;
+              this.size = Math.random() * 2 + 1;
+              this.speedX = (Math.random() - 0.5) * 0.5;
+              this.speedY = (Math.random() - 0.5) * 0.5;
+            }
+
+            update() {
+              this.x += this.speedX;
+              this.y += this.speedY;
+
+              if (this.x < 0) this.x = canvas.width;
+              if (this.x > canvas.width) this.x = 0;
+              if (this.y < 0) this.y = canvas.height;
+              if (this.y > canvas.height) this.y = 0;
+            }
+
+            draw() {
+              ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+              ctx.beginPath();
+              ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+              ctx.fill();
+            }
+          }
+
+          const particles = Array.from({ length: 100 }, () => new Particle());
+          return { particles, connections: [] };
+        },
+        draw: (state) => {
+          ctx.fillStyle = '#0a0a1a';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+          state.particles.forEach(particle => {
+            particle.update();
+            particle.draw();
+          });
+
+          // Draw connections
+          state.particles.forEach((p1, i) => {
+            state.particles.slice(i + 1).forEach(p2 => {
+              const dx = p1.x - p2.x;
+              const dy = p1.y - p2.y;
+              const distance = Math.sqrt(dx * dx + dy * dy);
+
+              if (distance < 100) {
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(255, 255, 255, ${0.2 * (1 - distance / 100)})`;
+                ctx.lineWidth = 0.5;
+                ctx.moveTo(p1.x, p1.y);
+                ctx.lineTo(p2.x, p2.y);
+                ctx.stroke();
+              }
+            });
+          });
         }
+      },
 
-        update() {
-          this.x += this.speedX;
-          this.y += this.speedY;
+      'gradient-flow': {
+        init: () => {
+          return {
+            time: 0,
+            colors: [
+              { r: 10, g: 10, b: 26 },
+              { r: 13, g: 17, b: 40 },
+              { r: 7, g: 11, b: 26 }
+            ]
+          };
+        },
+        draw: (state) => {
+          state.time += 0.005;
 
-          // Wrap around screen
-          if (this.x < -this.size) this.x = canvas.width + this.size;
-          if (this.x > canvas.width + this.size) this.x = -this.size;
-          if (this.y < -this.size) this.y = canvas.height + this.size;
-          if (this.y > canvas.height + this.size) this.y = -this.size;
-        }
-
-        draw() {
-          ctx.save();
-          ctx.globalAlpha = this.opacity;
-
-          const gradient = ctx.createRadialGradient(
-            this.x,
-            this.y,
-            0,
-            this.x,
-            this.y,
-            this.size
+          const gradient = ctx.createLinearGradient(
+            Math.sin(state.time) * canvas.width / 2 + canvas.width / 2,
+            Math.cos(state.time) * canvas.height / 2 + canvas.height / 2,
+            Math.cos(state.time) * canvas.width / 2 + canvas.width / 2,
+            Math.sin(state.time) * canvas.height / 2 + canvas.height / 2
           );
-          gradient.addColorStop(0, "rgba(255, 255, 255, 0.8)");
-          gradient.addColorStop(0.5, "rgba(255, 255, 255, 0.15)");
-          gradient.addColorStop(1, "rgba(255, 255, 255, 0)");
+
+          state.colors.forEach((color, i) => {
+            const offset = (i / (state.colors.length - 1) + Math.sin(state.time) * 0.1) % 1;
+            gradient.addColorStop(offset, `rgb(${color.r}, ${color.g}, ${color.b})`);
+          });
 
           ctx.fillStyle = gradient;
-          ctx.beginPath();
-          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-          ctx.fill();
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-          ctx.restore();
+          // Add subtle moving overlay
+          const overlay = ctx.createRadialGradient(
+            Math.sin(state.time * 0.5) * canvas.width / 2 + canvas.width / 2,
+            Math.cos(state.time * 0.5) * canvas.height / 2 + canvas.height / 2,
+            0,
+            Math.sin(state.time * 0.5) * canvas.width / 2 + canvas.width / 2,
+            Math.cos(state.time * 0.5) * canvas.height / 2 + canvas.height / 2,
+            canvas.width
+          );
+          overlay.addColorStop(0, 'rgba(255, 255, 255, 0.05)');
+          overlay.addColorStop(1, 'rgba(255, 255, 255, 0)');
+          ctx.fillStyle = overlay;
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+      },
+
+      'minimal-dots': {
+        init: () => {
+          class Dot {
+            constructor() {
+              this.reset();
+            }
+
+            reset() {
+              this.x = Math.random() * canvas.width;
+              this.y = Math.random() * canvas.height;
+              this.size = Math.random() * 3 + 1;
+              this.opacity = Math.random() * 0.5 + 0.1;
+              this.pulseSpeed = Math.random() * 0.02 + 0.01;
+              this.pulseOffset = Math.random() * Math.PI * 2;
+              this.vx = (Math.random() - 0.5) * 0.3;
+              this.vy = (Math.random() - 0.5) * 0.3;
+            }
+
+            update(time) {
+              this.x += this.vx;
+              this.y += this.vy;
+              if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+              if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+              this.opacity = 0.3 + Math.sin(time * this.pulseSpeed + this.pulseOffset) * 0.2;
+            }
+
+            draw() {
+              ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+              ctx.beginPath();
+              ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+              ctx.fill();
+            }
+          }
+
+          return {
+            dots: Array.from({ length: 50 }, () => new Dot()),
+            time: 0
+          };
+        },
+        draw: (state) => {
+          ctx.fillStyle = '#0a0a1a';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+          state.time += 0.016;
+          state.dots.forEach(dot => {
+            dot.update(state.time);
+            dot.draw();
+          });
+        }
+      },
+
+      'matrix-rain': {
+        init: () => {
+          const fontSize = 18;
+          const columns = Math.floor(window.innerWidth / fontSize);
+          const drops = Array(columns).fill(1);
+          return { fontSize, columns, drops };
+        },
+        draw: (state) => {
+          ctx.fillStyle = 'rgba(10, 10, 26, 0.15)';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.font = `${state.fontSize}px monospace`;
+          ctx.fillStyle = '#00ff99';
+          for (let i = 0; i < state.columns; i++) {
+            const text = String.fromCharCode(0x30A0 + Math.random() * 96);
+            ctx.fillText(text, i * state.fontSize, state.drops[i] * state.fontSize);
+            if (state.drops[i] * state.fontSize > canvas.height && Math.random() > 0.975) {
+              state.drops[i] = 0;
+            }
+            state.drops[i]++;
+          }
+        }
+      },
+
+      'fireflies': {
+        init: () => {
+          class Firefly {
+            constructor() {
+              this.reset();
+            }
+            reset() {
+              this.x = Math.random() * canvas.width;
+              this.y = Math.random() * canvas.height;
+              this.radius = Math.random() * 2 + 1;
+              this.alpha = Math.random() * 0.5 + 0.5;
+              this.angle = Math.random() * Math.PI * 2;
+              this.speed = Math.random() * 0.5 + 0.2;
+            }
+            update() {
+              this.x += Math.cos(this.angle) * this.speed;
+              this.y += Math.sin(this.angle) * this.speed;
+              this.angle += (Math.random() - 0.5) * 0.1;
+              if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+                this.reset();
+              }
+            }
+            draw() {
+              ctx.save();
+              ctx.globalAlpha = this.alpha;
+              ctx.shadowColor = '#fffbe6';
+              ctx.shadowBlur = 12;
+              ctx.beginPath();
+              ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+              ctx.fillStyle = '#fffbe6';
+              ctx.fill();
+              ctx.restore();
+            }
+          }
+          return Array.from({ length: 40 }, () => new Firefly());
+        },
+        draw: (fireflies) => {
+          ctx.fillStyle = '#0a0a1a';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          fireflies.forEach(f => { f.update(); f.draw(); });
+        }
+      },
+
+      'waves': {
+        init: () => {
+          return { t: 0 };
+        },
+        draw: (state) => {
+          state.t += 0.02;
+          ctx.fillStyle = '#0a0a1a';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          for (let i = 0; i < 3; i++) {
+            ctx.beginPath();
+            for (let x = 0; x <= canvas.width; x += 2) {
+              const y = canvas.height / 2 + Math.sin(x * 0.01 + state.t + i) * (20 + i * 10);
+              if (x === 0) ctx.moveTo(x, y);
+              else ctx.lineTo(x, y);
+            }
+            ctx.strokeStyle = `rgba(0,255,255,${0.2 + i * 0.1})`;
+            ctx.lineWidth = 2 + i;
+            ctx.stroke();
+          }
+        }
+      },
+
+      'spiral-galaxy': {
+        init: () => ({
+          time: 0,
+          arms: 4,
+          particles: Array.from({ length: 400 }, () => ({
+            angle: Math.random() * Math.PI * 2,
+            radius: Math.random() * canvas.width / 2,
+            speed: Math.random() * 0.001 + 0.001
+          }))
+        }),
+        draw: (state) => {
+          state.time += 0.01;
+          ctx.fillStyle = '#000016';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+          ctx.translate(canvas.width / 2, canvas.height / 2);
+
+          state.particles.forEach(p => {
+            const a = p.angle + state.time * p.speed;
+            const r = p.radius;
+            const x = r * Math.cos(a + state.arms * a);
+            const y = r * Math.sin(a + state.arms * a);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+            ctx.beginPath();
+            ctx.arc(x, y, 1, 0, Math.PI * 2);
+            ctx.fill();
+          });
+
+          ctx.setTransform(1, 0, 0, 1, 0, 0); // Reset transform
+        }
+      },
+
+      'bouncing-orbs': {
+        init: () => {
+          class Orb {
+            constructor() {
+              this.x = Math.random() * canvas.width;
+              this.y = Math.random() * canvas.height;
+              this.radius = Math.random() * 20 + 10;
+              this.vx = (Math.random() - 0.5) * 3;
+              this.vy = (Math.random() - 0.5) * 3;
+              this.color = `hsla(${Math.random() * 360}, 100%, 70%, 0.6)`;
+            }
+
+            update() {
+              this.x += this.vx;
+              this.y += this.vy;
+
+              if (this.x < this.radius || this.x > canvas.width - this.radius) this.vx *= -1;
+              if (this.y < this.radius || this.y > canvas.height - this.radius) this.vy *= -1;
+            }
+
+            draw() {
+              ctx.beginPath();
+              ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+              ctx.fillStyle = this.color;
+              ctx.fill();
+            }
+          }
+
+          return Array.from({ length: 20 }, () => new Orb());
+        },
+        draw: (orbs) => {
+          ctx.fillStyle = 'rgba(10, 10, 26, 0.2)';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          orbs.forEach(orb => {
+            orb.update();
+            orb.draw();
+          });
+        }
+      },
+
+      'nebula-glow': {
+        init: () => ({
+          time: 0
+        }),
+        draw: (state) => {
+          state.time += 0.005;
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+          for (let i = 0; i < 3; i++) {
+            const x = canvas.width / 2 + Math.sin(state.time + i) * 200;
+            const y = canvas.height / 2 + Math.cos(state.time + i) * 200;
+            const gradient = ctx.createRadialGradient(x, y, 0, x, y, 300);
+            gradient.addColorStop(0, `hsla(${(state.time * 100 + i * 120) % 360}, 100%, 60%, 0.2)`);
+            gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+          }
         }
       }
+    };
 
-      // Create shapes - fewer circles due to larger size
-      const shapes = Array.from({ length: 10 }, () => new Shape());
+    // Initialize and start animation
+    const currentAnimation = settings.backgroundAnimation || 'floating-shapes';
+    const animationState = animations[currentAnimation].init();
 
-      // Background gradient - darker colors
-      function drawBackground() {
-        const gradient = ctx.createLinearGradient(
-          0,
-          0,
-          canvas.width,
-          canvas.height
-        );
-        gradient.addColorStop(0, "#0a0a1a"); // Darker navy
-        gradient.addColorStop(0.5, "#0d1128"); // Darker blue
-        gradient.addColorStop(1, "#070b1a"); // Darkest blue
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    function animate() {
+      animations[currentAnimation].draw(animationState);
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    // Timer Logic
+    function formatTime(seconds) {
+      if (seconds <= 0) return { hours: "00", minutes: "00", seconds: "00" };
+      const hours = Math.floor(seconds / 3600);
+      const minutes = Math.floor((seconds % 3600) / 60);
+      const secs = seconds % 60;
+      return {
+        hours: hours.toString().padStart(2, "0"),
+        minutes: minutes.toString().padStart(2, "0"),
+        seconds: secs.toString().padStart(2, "0"),
+      };
+    }
+
+    function startCountdown() {
+      const endTimeStr = localStorage.getItem("countdownEndTime");
+      if (!endTimeStr) {
+        // Show "00" for all time units when no time is set
+        document.getElementById("hours-display").textContent = "00";
+        document.getElementById("minutes-display").textContent = "00";
+        document.getElementById("seconds-display").textContent = "00";
+        document.getElementById("hours-display").classList.add("hidden");
+        document.getElementById("hours-colon").classList.add("hidden");
+        return;
       }
 
-      function animate() {
-        drawBackground();
+      const endTime = parseInt(endTimeStr);
+      const updateTimer = () => {
+        const now = Date.now();
+        const remaining = Math.max(0, Math.floor((endTime - now) / 1000));
+        const formatted = formatTime(remaining);
 
-        // Update and draw shapes
-        shapes.forEach((shape) => {
-          shape.update();
-          shape.draw();
-        });
+        document.getElementById("hours-display").textContent =
+          formatted.hours;
+        document.getElementById("minutes-display").textContent =
+          formatted.minutes;
+        document.getElementById("seconds-display").textContent =
+          formatted.seconds;
 
-        requestAnimationFrame(animate);
-      }
+        if (formatted.hours === "00") {
+          document.getElementById("hours-display").classList.add("hidden");
+          document.getElementById("hours-colon").classList.add("hidden");
+        } else {
+          document.getElementById("hours-display").classList.remove("hidden");
+          document.getElementById("hours-colon").classList.remove("hidden");
+        }
 
-      animate();
-
-      // Timer Logic
-      function formatTime(seconds) {
-        if (seconds <= 0) return { hours: "00", minutes: "00", seconds: "00" };
-        const hours = Math.floor(seconds / 3600);
-        const minutes = Math.floor((seconds % 3600) / 60);
-        const secs = seconds % 60;
-        return {
-          hours: hours.toString().padStart(2, "0"),
-          minutes: minutes.toString().padStart(2, "0"),
-          seconds: secs.toString().padStart(2, "0"),
-        };
-      }
-
-      function startCountdown() {
-        const endTimeStr = localStorage.getItem("countdownEndTime");
-        if (!endTimeStr) {
-          // Show "00" for all time units when no time is set
+        if (remaining <= 0) {
+          // Show "00" for all time units when time is up
           document.getElementById("hours-display").textContent = "00";
           document.getElementById("minutes-display").textContent = "00";
           document.getElementById("seconds-display").textContent = "00";
           document.getElementById("hours-display").classList.add("hidden");
           document.getElementById("hours-colon").classList.add("hidden");
-          return;
+          localStorage.removeItem("countdownEndTime");
+          clearInterval(intervalId);
         }
+      };
 
-        const endTime = parseInt(endTimeStr);
-        const updateTimer = () => {
-          const now = Date.now();
-          const remaining = Math.max(0, Math.floor((endTime - now) / 1000));
-          const formatted = formatTime(remaining);
+      updateTimer();
+      const intervalId = setInterval(updateTimer, 1000);
+    }
 
-          document.getElementById("hours-display").textContent =
-            formatted.hours;
-          document.getElementById("minutes-display").textContent =
-            formatted.minutes;
-          document.getElementById("seconds-display").textContent =
-            formatted.seconds;
-
-          if (formatted.hours === "00") {
-            document.getElementById("hours-display").classList.add("hidden");
-            document.getElementById("hours-colon").classList.add("hidden");
-          } else {
-            document.getElementById("hours-display").classList.remove("hidden");
-            document.getElementById("hours-colon").classList.remove("hidden");
-          }
-
-          if (remaining <= 0) {
-            // Show "00" for all time units when time is up
-            document.getElementById("hours-display").textContent = "00";
-            document.getElementById("minutes-display").textContent = "00";
-            document.getElementById("seconds-display").textContent = "00";
-            document.getElementById("hours-display").classList.add("hidden");
-            document.getElementById("hours-colon").classList.add("hidden");
-            localStorage.removeItem("countdownEndTime");
-            clearInterval(intervalId);
-          }
-        };
-
-        updateTimer();
-        const intervalId = setInterval(updateTimer, 1000);
-
-        // Current time display
-        const updateCurrentTime = () => {
-          const now = new Date();
-          const hours = now.getHours() % 12 || 12; // Convert to 12-hour format
-          const minutes = now.getMinutes().toString().padStart(2, "0");
-          const ampm = now.getHours() >= 12 ? "PM" : "AM";
-          document.getElementById(
-            "current-time"
-          ).textContent = `${hours}:${minutes} ${ampm}`;
-        };
-        updateCurrentTime();
-        setInterval(updateCurrentTime, 1000);
+    // Current time display
+    const updateCurrentTime = () => {
+      // Check if current time should be shown
+      if (!settings.showCurrentTime) {
+        const timeElement = document.getElementById("current-time");
+        if (timeElement) {
+          timeElement.style.display = 'none';
+        }
+        return;
       }
 
-      // Start countdown if end time exists
-      startCountdown();
-    </script>
-  </body>
+      const now = new Date();
+      const timeFormat = settings.timeFormat || '12h';
+
+      let timeString;
+      if (timeFormat === '24h') {
+        // 24-hour format
+        const hours = now.getHours().toString().padStart(2, "0");
+        const minutes = now.getMinutes().toString().padStart(2, "0");
+        timeString = `${hours}:${minutes}`;
+      } else {
+        // 12-hour format
+        const hours = now.getHours() % 12 || 12;
+        const minutes = now.getMinutes().toString().padStart(2, "0");
+        const ampm = now.getHours() >= 12 ? "PM" : "AM";
+        timeString = `${hours}:${minutes} ${ampm}`;
+      }
+
+      const timeElement = document.getElementById("current-time");
+      if (timeElement) {
+        timeElement.style.display = 'block';
+        timeElement.textContent = timeString;
+      }
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        updateCurrentTime();
+        setInterval(updateCurrentTime, 1000);
+      });
+    } else {
+      updateCurrentTime();
+      setInterval(updateCurrentTime, 1000);
+    }
+
+    // Start countdown if end time exists
+    startCountdown();
+  </script>
+</body>
+
 </html>

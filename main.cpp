@@ -72,6 +72,7 @@ bool setup_temp_directory() {
     // Extract embedded resources
     if (!extract_resource(IDR_SETUP_HTML, L"setup.html") ||
         !extract_resource(IDR_COUNTDOWN_HTML, L"countdown.html") ||
+        !extract_resource(IDR_SETTINGS_HTML, L"settings.html") ||
         !extract_resource(IDR_TAILWIND_JS, L"tailwind.js")) {
         log("Error: Failed to extract resources");
         return false;
@@ -214,6 +215,18 @@ void run_server() {
 
     svr.Get("/countdown", [&](const httplib::Request&, httplib::Response& res) {
         std::ifstream file(temp_dir_str + "\\countdown.html", std::ios::binary);
+        if (file) {
+            std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+            res.set_content(content, "text/html");
+        }
+        else {
+            res.status = 500;
+            res.set_content("Internal Server Error", "text/plain");
+        }
+    });
+
+    svr.Get("/settings", [&](const httplib::Request&, httplib::Response& res) {
+        std::ifstream file(temp_dir_str + "\\settings.html", std::ios::binary);
         if (file) {
             std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
             res.set_content(content, "text/html");

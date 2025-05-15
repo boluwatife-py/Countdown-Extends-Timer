@@ -3,6 +3,7 @@
 
 IDR_SETUP_HTML RCDATA "setup.html"
 IDR_COUNTDOWN_HTML RCDATA "countdown.html"
+IDR_SETTINGS_HTML RCDATA "settings.html"
 IDR_TAILWIND_JS RCDATA "tailwind.js"
 IDR_ICON_ICO ICON "icon.ico"
 

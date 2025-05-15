@@ -1,300 +1,235 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Setup Timer</title>
-    <script src="/tailwind.js"></script>
-  </head>
-  <body class="bg-gray-900 text-white min-h-screen flex flex-col">
-    <div class="flex-1 flex items-center justify-center p-4">
-      <div class="w-full max-w-lg space-y-6">
-        <div class="text-center space-y-2">
-          <h1 class="text-2xl font-semibold tracking-tight">Set Your Timer</h1>
-          <p class="text-sm text-gray-400">
-            Choose a preset or customize your countdown
-          </p>
-        </div>
 
-        <div
-          class="bg-gray-800/50 backdrop-blur-sm shadow-lg rounded-xl p-6 border border-gray-700"
-        >
-          <div class="space-y-6">
-            <div class="grid grid-cols-2 gap-4 sm:grid-cols-4">
-              <button
-                onclick="startPreset(300)"
-                class="flex flex-col items-center p-4 rounded-xl bg-gray-800 border border-gray-700 hover:border-blue-500 hover:bg-blue-500/10 transition-all space-y-2 group"
-              >
-                <svg
-                  class="w-6 h-6 text-gray-400 group-hover:text-blue-500"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                  ></path>
-                </svg>
-                <span class="text-sm font-medium">Quick Break</span>
-                <span class="text-xs text-gray-400">5 min</span>
-              </button>
-              <button
-                onclick="startPreset(900)"
-                class="flex flex-col items-center p-4 rounded-xl bg-gray-800 border border-gray-700 hover:border-blue-500 hover:bg-blue-500/10 transition-all space-y-2 group"
-              >
-                <svg
-                  class="w-6 h-6 text-gray-400 group-hover:text-blue-500"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M5 11l7-7 7 7M5 19l7-7 7 7"
-                  ></path>
-                </svg>
-                <span class="text-sm font-medium">Coffee Break</span>
-                <span class="text-xs text-gray-400">15 min</span>
-              </button>
-              <button
-                onclick="startPreset(1500)"
-                class="flex flex-col items-center p-4 rounded-xl bg-gray-800 border border-gray-700 hover:border-blue-500 hover:bg-blue-500/10 transition-all space-y-2 group"
-              >
-                <svg
-                  class="w-6 h-6 text-gray-400 group-hover:text-blue-500"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                  ></path>
-                </svg>
-                <span class="text-sm font-medium">Focus Time</span>
-                <span class="text-xs text-gray-400">25 min</span>
-              </button>
-              <button
-                onclick="startPreset(2700)"
-                class="flex flex-col items-center p-4 rounded-xl bg-gray-800 border border-gray-700 hover:border-blue-500 hover:bg-blue-500/10 transition-all space-y-2 group"
-              >
-                <svg
-                  class="w-6 h-6 text-gray-400 group-hover:text-blue-500"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M3 6h18M3 12h18M3 18h18"
-                  ></path>
-                </svg>
-                <span class="text-sm font-medium">Workout</span>
-                <span class="text-xs text-gray-400">45 min</span>
-              </button>
-            </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Setup Timer</title>
+  <script src="/tailwind.js"></script>
+</head>
 
-            <div class="relative">
-              <div class="absolute inset-0 flex items-center">
-                <div class="w-full border-t border-gray-700"></div>
-              </div>
-              <div class="relative flex justify-center text-xs uppercase">
-                <span class="px-2 bg-gray-800 text-gray-400 tracking-wider"
-                  >Custom Time</span
-                >
-              </div>
-            </div>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col">
+  <div class="flex-1 flex items-center justify-center p-4">
+    <div class="w-full max-w-lg space-y-6">
+      <div class="text-center space-y-2">
+        <h1 class="text-2xl font-semibold tracking-tight">Set Your Timer</h1>
+        <p class="text-sm text-gray-400">
+          Choose a preset or customize your countdown
+        </p>
+      </div>
 
-            <div class="grid grid-cols-3 gap-4 mb-4">
-              <div class="space-y-1.5">
-                <label class="block text-sm font-medium text-gray-400"
-                  >Hours</label
-                >
-                <input
-                  id="hours"
-                  inputmode="numeric"
-                  pattern="[0-9]*"
-                  placeholder="00"
-                  class="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-center text-2xl font-mono focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                />
-              </div>
-              <div class="space-y-1.5">
-                <label class="block text-sm font-medium text-gray-400"
-                  >Minutes</label
-                >
-                <input
-                  id="minutes"
-                  inputmode="numeric"
-                  pattern="[0-9]*"
-                  placeholder="00"
-                  class="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-center text-2xl font-mono focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                />
-              </div>
-              <div class="space-y-1.5">
-                <label class="block text-sm font-medium text-gray-400"
-                  >Seconds</label
-                >
-                <input
-                  id="seconds"
-                  inputmode="numeric"
-                  pattern="[0-9]*"
-                  placeholder="00"
-                  class="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-center text-2xl font-mono focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                />
-              </div>
-            </div>
-
-            <button
-              onclick="startCustom()"
-              class="w-full py-3 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all flex items-center justify-center space-x-2 mb-4"
-            >
-              <span>Start Countdown (Duration)</span>
-              <svg
-                class="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 5l7 7-7 7"
-                ></path>
+      <div class="bg-gray-800/50 backdrop-blur-sm shadow-lg rounded-xl p-6 border border-gray-700">
+        <div class="space-y-6">
+          <div class="grid grid-cols-2 gap-4 sm:grid-cols-4">
+            <button onclick="startPreset(300)"
+              class="flex flex-col items-center p-4 rounded-xl bg-gray-800 border border-gray-700 hover:border-blue-500 hover:bg-blue-500/10 transition-all space-y-2 group">
+              <svg class="w-6 h-6 text-gray-400 group-hover:text-blue-500" fill="none" stroke="currentColor"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
+              <span class="text-sm font-medium">Quick Break</span>
+              <span class="text-xs text-gray-400">5 min</span>
             </button>
-
-            <div class="relative mt-8">
-              <div class="absolute inset-0 flex items-center">
-                <div class="w-full border-t border-gray-700"></div>
-              </div>
-              <div class="relative flex justify-center text-xs uppercase">
-                <span class="px-2 bg-gray-800 text-gray-400 tracking-wider"
-                  >Countdown to a Specific Time</span
-                >
-              </div>
-            </div>
-
-            <div class="flex flex-col items-center gap-4 mb-4 mt-4">
-              <div class="space-y-1.5 w-full">
-                <label class="block text-sm font-medium text-gray-400" for="target-time">
-                  Select Time
-                </label>
-                <input
-                  id="target-time"
-                  type="time"
-                  class="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-center text-2xl font-mono focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all text-white"
-                />
-              </div>
-            </div>
-
-            <button
-              onclick="startCountdownToTime()"
-              class="w-full py-3 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all flex items-center justify-center space-x-2"
-            >
-              <span>Start Countdown (To Time)</span>
-              <svg
-                class="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 5l7 7-7 7"
-                ></path>
+            <button onclick="startPreset(900)"
+              class="flex flex-col items-center p-4 rounded-xl bg-gray-800 border border-gray-700 hover:border-blue-500 hover:bg-blue-500/10 transition-all space-y-2 group">
+              <svg class="w-6 h-6 text-gray-400 group-hover:text-blue-500" fill="none" stroke="currentColor"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 11l7-7 7 7M5 19l7-7 7 7">
+                </path>
               </svg>
+              <span class="text-sm font-medium">Coffee Break</span>
+              <span class="text-xs text-gray-400">15 min</span>
+            </button>
+            <button onclick="startPreset(1500)"
+              class="flex flex-col items-center p-4 rounded-xl bg-gray-800 border border-gray-700 hover:border-blue-500 hover:bg-blue-500/10 transition-all space-y-2 group">
+              <svg class="w-6 h-6 text-gray-400 group-hover:text-blue-500" fill="none" stroke="currentColor"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2">
+                </path>
+              </svg>
+              <span class="text-sm font-medium">Focus Time</span>
+              <span class="text-xs text-gray-400">25 min</span>
+            </button>
+            <button onclick="startPreset(2700)"
+              class="flex flex-col items-center p-4 rounded-xl bg-gray-800 border border-gray-700 hover:border-blue-500 hover:bg-blue-500/10 transition-all space-y-2 group">
+              <svg class="w-6 h-6 text-gray-400 group-hover:text-blue-500" fill="none" stroke="currentColor"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6h18M3 12h18M3 18h18">
+                </path>
+              </svg>
+              <span class="text-sm font-medium">Workout</span>
+              <span class="text-xs text-gray-400">45 min</span>
             </button>
           </div>
+
+          <div class="relative">
+            <div class="absolute inset-0 flex items-center">
+              <div class="w-full border-t border-gray-700"></div>
+            </div>
+            <div class="relative flex justify-center text-xs uppercase">
+              <span class="px-2 bg-gray-800 text-gray-400 tracking-wider">Custom Time</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-4 mb-4">
+            <div class="space-y-1.5">
+              <label class="block text-sm font-medium text-gray-400">Hours</label>
+              <input id="hours" inputmode="numeric" pattern="[0-9]*" placeholder="00"
+                class="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-center text-2xl font-mono focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all" />
+            </div>
+            <div class="space-y-1.5">
+              <label class="block text-sm font-medium text-gray-400">Minutes</label>
+              <input id="minutes" inputmode="numeric" pattern="[0-9]*" placeholder="00"
+                class="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-center text-2xl font-mono focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all" />
+            </div>
+            <div class="space-y-1.5">
+              <label class="block text-sm font-medium text-gray-400">Seconds</label>
+              <input id="seconds" inputmode="numeric" pattern="[0-9]*" placeholder="00"
+                class="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-center text-2xl font-mono focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all" />
+            </div>
+          </div>
+
+          <button onclick="startCustom()"
+            class="w-full py-3 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all flex items-center justify-center space-x-2 mb-4">
+            <span>Start Countdown (Duration)</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </button>
+
+          <div class="relative mt-8">
+            <div class="absolute inset-0 flex items-center">
+              <div class="w-full border-t border-gray-700"></div>
+            </div>
+            <div class="relative flex justify-center text-xs uppercase">
+              <span class="px-2 bg-gray-800 text-gray-400 tracking-wider">Countdown to a Specific Time</span>
+            </div>
+          </div>
+
+          <div class="flex flex-col items-center gap-4 mb-4 mt-4">
+            <div class="space-y-1.5 w-full">
+              <label class="block text-sm font-medium text-gray-400" for="target-time">
+                Select Time
+              </label>
+              <input id="target-time" type="time"
+                class="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-center text-2xl font-mono focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all text-white" />
+            </div>
+          </div>
+
+          <button onclick="startCountdownToTime()"
+            class="w-full py-3 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all flex items-center justify-center space-x-2">
+            <span>Start Countdown (To Time)</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </button>
         </div>
       </div>
     </div>
+  </div>
 
-    <div class="text-center px-4 py-3">
-      <div id="current-time" class="text-[1.5vw] font-medium text-gray-500 tracking-wider"></div>
-    </div>
+  <div class="text-center px-4 py-3">
+    <div id="current-time" class="text-[1.5vw] font-medium text-gray-500 tracking-wider"></div>
+    <a
+      href="/settings"
+      class="inline-block mt-2 text-sm text-gray-400 hover:text-white transition-colors"
+    >
+      <svg
+        class="w-4 h-4 inline-block mr-1"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+        />
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+        />
+      </svg>
+      Settings
+    </a>
+  </div>
 
-    <script>
-      function startPreset(seconds) {
-        const endTime = Date.now() + seconds * 1000;
+  <script>
+    function startPreset(seconds) {
+      const endTime = Date.now() + seconds * 1000;
+      localStorage.setItem("countdownEndTime", endTime.toString());
+      window.location.href = "/countdown";
+    }
+
+    function startCustom() {
+      const hours = parseInt(document.getElementById("hours").value || "0");
+      const minutes = parseInt(
+        document.getElementById("minutes").value || "0"
+      );
+      const seconds = parseInt(
+        document.getElementById("seconds").value || "0"
+      );
+      const totalSeconds = hours * 3600 + minutes * 60 + seconds;
+      if (totalSeconds > 0) {
+        const endTime = Date.now() + totalSeconds * 1000;
         localStorage.setItem("countdownEndTime", endTime.toString());
         window.location.href = "/countdown";
       }
+    }
 
-      function startCustom() {
-        const hours = parseInt(document.getElementById("hours").value || "0");
-        const minutes = parseInt(
-          document.getElementById("minutes").value || "0"
-        );
-        const seconds = parseInt(
-          document.getElementById("seconds").value || "0"
-        );
-        const totalSeconds = hours * 3600 + minutes * 60 + seconds;
-        if (totalSeconds > 0) {
-          const endTime = Date.now() + totalSeconds * 1000;
-          localStorage.setItem("countdownEndTime", endTime.toString());
-          window.location.href = "/countdown";
-        }
+    function startCountdownToTime() {
+      const timeValue = document.getElementById("target-time").value;
+      if (!timeValue) return;
+      const [targetHours, targetMinutes] = timeValue.split(":").map(Number);
+      const now = new Date();
+      const target = new Date(now);
+      target.setHours(targetHours, targetMinutes, 0, 0);
+      if (target <= now) {
+        // If the selected time is earlier than now, set for next day
+        target.setDate(target.getDate() + 1);
       }
-
-      function startCountdownToTime() {
-        const timeValue = document.getElementById("target-time").value;
-        if (!timeValue) return;
-        const [targetHours, targetMinutes] = timeValue.split(":").map(Number);
-        const now = new Date();
-        const target = new Date(now);
-        target.setHours(targetHours, targetMinutes, 0, 0);
-        if (target <= now) {
-          // If the selected time is earlier than now, set for next day
-          target.setDate(target.getDate() + 1);
-        }
-        const totalSeconds = Math.floor((target - now) / 1000);
-        if (totalSeconds > 0) {
-          const endTime = Date.now() + totalSeconds * 1000;
-          localStorage.setItem("countdownEndTime", endTime.toString());
-          window.location.href = "/countdown";
-        }
+      const totalSeconds = Math.floor((target - now) / 1000);
+      if (totalSeconds > 0) {
+        const endTime = Date.now() + totalSeconds * 1000;
+        localStorage.setItem("countdownEndTime", endTime.toString());
+        window.location.href = "/countdown";
       }
+    }
 
-      // Add current time display
-      function updateCurrentTime() {
-        const now = new Date();
-        const hours = now.getHours() % 12 || 12; // Convert to 12-hour format
-        const minutes = now.getMinutes().toString().padStart(2, "0");
-        const seconds = now.getSeconds().toString().padStart(2, "0");
-        const ampm = now.getHours() >= 12 ? "PM" : "AM";
-        document.getElementById("current-time").textContent = `${hours}:${minutes}:${seconds} ${ampm}`;
-      }
-      updateCurrentTime();
-      setInterval(updateCurrentTime, 1000);
+    // Add current time display
+    function updateCurrentTime() {
+      const now = new Date();
+      const hours = now.getHours() % 12 || 12; // Convert to 12-hour format
+      const minutes = now.getMinutes().toString().padStart(2, "0");
+      const seconds = now.getSeconds().toString().padStart(2, "0");
+      const ampm = now.getHours() >= 12 ? "PM" : "AM";
+      document.getElementById("current-time").textContent = `${hours}:${minutes}:${seconds} ${ampm}`;
+    }
+    updateCurrentTime();
+    setInterval(updateCurrentTime, 1000);
 
-      document
-        .querySelectorAll('input[inputmode="numeric"]')
-        .forEach((input) => {
-          input.addEventListener("input", (e) => {
-            const max = input.id === "hours" ? 23 : 59;
-            const value = e.target.value;
-            if (
-              value === "" ||
-              (parseInt(value) >= 0 && parseInt(value) <= max)
-            ) {
-              e.target.value = value;
-            } else {
-              e.target.value = "";
-            }
-          });
+    document
+      .querySelectorAll('input[inputmode="numeric"]')
+      .forEach((input) => {
+        input.addEventListener("input", (e) => {
+          const max = input.id === "hours" ? 23 : 59;
+          const value = e.target.value;
+          if (
+            value === "" ||
+            (parseInt(value) >= 0 && parseInt(value) <= max)
+          ) {
+            e.target.value = value;
+          } else {
+            e.target.value = "";
+          }
         });
-    </script>
-  </body>
+      });
+  </script>
+</body>
+
 </html>
