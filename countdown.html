@@ -487,8 +487,239 @@
             ctx.fillRect(0, 0, canvas.width, canvas.height);
           }
         }
+      },
+
+      'cosmic-pulse': {
+        init: () => {
+          class Pulse {
+            constructor() {
+              this.x = Math.random() * canvas.width;
+              this.y = Math.random() * canvas.height;
+              this.radius = 0;
+              this.maxRadius = Math.random() * 100 + 50;
+              this.speed = Math.random() * 0.02 + 0.01;
+              this.opacity = 0.3;
+            }
+
+            update() {
+              this.radius += this.speed;
+              this.opacity = 0.3 * (1 - this.radius / this.maxRadius);
+              if (this.radius > this.maxRadius) {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.radius = 0;
+                this.maxRadius = Math.random() * 100 + 50;
+                this.speed = Math.random() * 0.02 + 0.01;
+                this.opacity = 0.3;
+              }
+            }
+
+            draw() {
+              ctx.save();
+              ctx.globalAlpha = this.opacity;
+              const gradient = ctx.createRadialGradient(
+                this.x, this.y, 0,
+                this.x, this.y, this.radius
+              );
+              gradient.addColorStop(0, 'rgba(100, 200, 255, 0.5)');
+              gradient.addColorStop(1, 'rgba(100, 200, 255, 0)');
+              ctx.fillStyle = gradient;
+              ctx.beginPath();
+              ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.restore();
+            }
+          }
+
+          return Array.from({ length: 8 }, () => new Pulse());
+        },
+        draw: (pulses) => {
+          ctx.fillStyle = '#0a0a1a';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          pulses.forEach(pulse => {
+            pulse.update();
+            pulse.draw();
+          });
+        }
+      },
+
+      'starfield': {
+        init: () => {
+          class Star {
+            constructor() {
+              this.reset();
+            }
+
+            reset() {
+              this.x = Math.random() * canvas.width;
+              this.y = Math.random() * canvas.height;
+              this.z = Math.random() * canvas.width;
+              this.size = 1;
+            }
+
+            update() {
+              this.z -= 2;
+              if (this.z <= 0) {
+                this.reset();
+              }
+            }
+
+            draw() {
+              const sx = (this.x / this.z) * canvas.width + canvas.width / 2;
+              const sy = (this.y / this.z) * canvas.height + canvas.height / 2;
+              const size = (1 - this.z / canvas.width) * 3;
+              ctx.fillStyle = `rgba(255, 255, 255, ${1 - this.z / canvas.width})`;
+              ctx.beginPath();
+              ctx.arc(sx, sy, size, 0, Math.PI * 2);
+              ctx.fill();
+            }
+          }
+
+          return Array.from({ length: 200 }, () => new Star());
+        },
+        draw: (stars) => {
+          ctx.fillStyle = '#0a0a1a';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          stars.forEach(star => {
+            star.update();
+            star.draw();
+          });
+        }
+      },
+
+      'aurora': {
+        init: () => ({
+          time: 0,
+          waves: Array.from({ length: 5 }, () => ({
+            offset: Math.random() * Math.PI * 2,
+            speed: Math.random() * 0.02 + 0.01,
+            amplitude: Math.random() * 100 + 50
+          }))
+        }),
+        draw: (state) => {
+          state.time += 0.016;
+          ctx.fillStyle = '#0a0a1a';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+          state.waves.forEach((wave, i) => {
+            ctx.beginPath();
+            for (let x = 0; x <= canvas.width; x += 2) {
+              const y = canvas.height / 2 +
+                Math.sin(x * 0.005 + state.time * wave.speed + wave.offset) * wave.amplitude +
+                i * 20;
+              if (x === 0) ctx.moveTo(x, y);
+              else ctx.lineTo(x, y);
+            }
+            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            gradient.addColorStop(0, `hsla(${i * 60}, 80%, 50%, 0)`);
+            gradient.addColorStop(0.5, `hsla(${i * 60}, 80%, 50%, 0.3)`);
+            gradient.addColorStop(1, `hsla(${i * 60}, 80%, 50%, 0)`);
+            ctx.strokeStyle = gradient;
+            ctx.lineWidth = 20;
+            ctx.stroke();
+          });
+        }
+      },
+
+      'vortex': {
+        init: () => {
+          class Particle {
+            constructor() {
+              this.angle = Math.random() * Math.PI * 2;
+              this.radius = Math.random() * canvas.width / 4;
+              this.speed = Math.random() * 0.02 + 0.01;
+              this.size = Math.random() * 2 + 1;
+            }
+
+            update() {
+              this.angle += this.speed;
+              this.radius += Math.sin(this.angle) * 0.5;
+              if (this.radius > canvas.width / 2) {
+                this.angle = Math.random() * Math.PI * 2;
+                this.radius = 0;
+                this.speed = Math.random() * 0.02 + 0.01;
+              }
+            }
+
+            draw() {
+              const x = canvas.width / 2 + this.radius * Math.cos(this.angle);
+              const y = canvas.height / 2 + this.radius * Math.sin(this.angle);
+              ctx.fillStyle = `rgba(255, 255, 255, ${1 - this.radius / (canvas.width / 2)})`;
+              ctx.beginPath();
+              ctx.arc(x, y, this.size, 0, Math.PI * 2);
+              ctx.fill();
+            }
+          }
+
+          return Array.from({ length: 150 }, () => new Particle());
+        },
+        draw: (particles) => {
+          ctx.fillStyle = '#0a0a1a';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          particles.forEach(particle => {
+            particle.update();
+            particle.draw();
+          });
+        }
+      },
+
+      'light-trails': {
+        init: () => {
+          class Trail {
+            constructor() {
+              this.x = Math.random() * canvas.width;
+              this.y = Math.random() * canvas.height;
+              this.angle = Math.random() * Math.PI * 2;
+              this.speed = Math.random() * 2 + 1;
+              this.length = Math.random() * 20 + 10;
+              this.hue = Math.random() * 360;
+            }
+
+            update() {
+              this.angle += (Math.random() - 0.5) * 0.1;
+              this.x += Math.cos(this.angle) * this.speed;
+              this.y += Math.sin(this.angle) * this.speed;
+
+              if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.angle = Math.random() * Math.PI * 2;
+                this.speed = Math.random() * 2 + 1;
+              }
+            }
+
+            draw() {
+              ctx.beginPath();
+              const gradient = ctx.createLinearGradient(
+                this.x, this.y,
+                this.x - Math.cos(this.angle) * this.length,
+                this.y - Math.sin(this.angle) * this.length
+              );
+              gradient.addColorStop(0, `hsla(${this.hue}, 100%, 70%, 0.8)`);
+              gradient.addColorStop(1, `hsla(${this.hue}, 100%, 70%, 0)`);
+              ctx.strokeStyle = gradient;
+              ctx.lineWidth = 2;
+              ctx.moveTo(this.x, this.y);
+              ctx.lineTo(
+                this.x - Math.cos(this.angle) * this.length,
+                this.y - Math.sin(this.angle) * this.length
+              );
+              ctx.stroke();
+            }
+          }
+
+          return Array.from({ length: 30 }, () => new Trail());
+        },
+        draw: (trails) => {
+          ctx.fillStyle = 'rgba(10, 10, 26, 0.1)';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          trails.forEach(trail => {
+            trail.update();
+            trail.draw();
+          });
+        }
       }
-    };
+    }
 
     // Initialize and start animation
     const currentAnimation = settings.backgroundAnimation || 'floating-shapes';
