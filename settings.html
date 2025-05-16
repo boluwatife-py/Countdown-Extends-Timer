@@ -6,13 +6,81 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Timer Settings</title>
   <script src="/tailwind.js"></script>
+  <!-- Add Heroicons -->
+  <script src="https://unpkg.com/@heroicons/v2/24/outline/esm/index.js"></script>
+  <style>
+    .custom-select {
+      position: relative;
+      user-select: none;
+    }
+    
+    .select-trigger {
+      cursor: pointer;
+    }
+    
+    .select-options {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      margin-top: 0.5rem;
+      border-radius: 0.5rem;
+      background: rgb(17, 24, 39);
+      border: 1px solid rgb(55, 65, 81);
+      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: all 0.2s ease;
+    }
+    
+    .select-options.open {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    
+    .select-option {
+      padding: 0.75rem 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      transition: all 0.2s ease;
+    }
+    
+    .select-option:hover {
+      background: rgb(31, 41, 55);
+    }
+    
+    .select-option.selected {
+      background: rgb(37, 99, 235);
+    }
+    
+    .select-option-icon {
+      width: 1.25rem;
+      height: 1.25rem;
+      color: rgb(156, 163, 175);
+    }
+    
+    .select-option.selected .select-option-icon {
+      color: white;
+    }
+  </style>
 </head>
 
 <body class="bg-gray-900 text-white min-h-screen flex flex-col">
   <div class="flex-1 flex items-center justify-center p-4">
     <div class="w-full max-w-lg space-y-6">
       <div class="text-center space-y-2">
-        <h1 class="text-2xl font-semibold tracking-tight">Timer Settings</h1>
+        <h1 class="text-2xl font-semibold tracking-tight flex items-center justify-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+          Timer Settings
+        </h1>
         <p class="text-sm text-gray-400">
           Customize your timer display and appearance
         </p>
@@ -22,36 +90,51 @@
         <div class="space-y-6">
           <!-- Background Animation Selection -->
           <div class="space-y-3">
-            <label class="block text-sm font-medium text-gray-400">
+            <label class="block text-sm font-medium text-gray-400 flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
+              </svg>
               Background Animation
             </label>
-            <select id="background-animation"
-              class="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all">
-              <option value="floating-shapes">Floating Shapes (Default)</option>
-              <option value="particle-network">Particle Network</option>
-              <option value="gradient-flow">Gradient Flow</option>
-              <option value="minimal-dots">Minimal Dots</option>
-              <option value="matrix-rain">Matrix Rain</option>
-              <option value="fireflies">Fireflies</option>
-              <option value="waves">Waves</option>
-              <option value="spiral-galaxy">Spiral Galaxy</option>
-              <option value="bouncing-orbs">Bouncing Orbs</option>
-              <option value="nebula-glow">Nebula Glow</option>
-            </select>
+            <div class="custom-select">
+              <div class="select-trigger px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all flex items-center justify-between">
+                <span class="flex items-center gap-2">
+                  <span class="select-option-icon" id="selected-icon"></span>
+                  <span id="selected-text">Floating Shapes</span>
+                </span>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-gray-400">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                </svg>
+              </div>
+              <div class="select-options">
+                <!-- Options will be populated by JavaScript -->
+              </div>
+            </div>
           </div>
 
           <!-- Bottom Label Text -->
           <div class="space-y-3">
-            <label class="block text-sm font-medium text-gray-400">   
+            <label class="block text-sm font-medium text-gray-400 flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
+              </svg>
               Bottom Label Text
             </label>
-            <input id="bottom-label" type="text" placeholder="Enter your custom label"
-              class="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all" />
+            <div class="relative">
+              <input id="bottom-label" type="text" placeholder="Enter your custom label"
+                class="w-full pl-10 pr-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all" />
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
+              </svg>
+            </div>
           </div>
 
           <!-- Current Time Toggle -->
           <div class="flex items-center justify-between">
-            <label class="text-sm font-medium text-gray-400">
+            <label class="text-sm font-medium text-gray-400 flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
               Show Current Time
             </label>
             <button id="current-time-toggle"
@@ -65,20 +148,26 @@
           <!-- Save Button -->
           <button onclick="saveSettings()"
             class="w-full py-3 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all flex items-center justify-center space-x-2">
-            <span>Save Settings</span>
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
+            <span>Save Settings</span>
           </button>
         </div>
       </div>
 
       <!-- Navigation Buttons -->
       <div class="flex justify-center space-x-4">
-        <a href="/setup" class="px-4 py-2 text-sm font-medium text-gray-400 hover:text-white transition-colors">
+        <a href="/setup" class="px-4 py-2 text-sm font-medium text-gray-400 hover:text-white transition-colors flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
+          </svg>
           Back to Setup
         </a>
-        <a href="/countdown" class="px-4 py-2 text-sm font-medium text-gray-400 hover:text-white transition-colors">
+        <a href="/countdown" class="px-4 py-2 text-sm font-medium text-gray-400 hover:text-white transition-colors flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 15.75V18m-7.5-6.75h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V13.5zm0 2.25h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V18zm2.498-6.75h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V13.5zm0 2.25h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V18zm2.504-6.75h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V13.5zm0 2.25h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V18zm2.498-6.75h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V13.5zM8.25 6h7.5v2.25h-7.5V6zM12 2.25c-1.892 0-3.758.11-5.593.322C5.307 2.7 4.5 3.65 4.5 4.757V19.5a2.25 2.25 0 002.25 2.25h10.5a2.25 2.25 0 002.25-2.25V4.757c0-1.108-.806-2.057-1.907-2.185A48.507 48.507 0 0012 2.25z" />
+          </svg>
           View Timer
         </a>
       </div>
@@ -86,13 +175,120 @@
   </div>
 
   <script>
+    // Animation options with icons
+    const animationOptions = [
+      { value: 'floating-shapes', label: 'Floating Shapes', icon: 'M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z' },
+      { value: 'particle-network', label: 'Particle Network', icon: 'M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z' },
+      { value: 'gradient-flow', label: 'Gradient Flow', icon: 'M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5m.75-9l3-3 2.148 2.148A12.061 12.061 0 0116.5 7.605' },
+      { value: 'minimal-dots', label: 'Minimal Dots', icon: 'M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z' },
+      { value: 'matrix-rain', label: 'Matrix Rain', icon: 'M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5m.75-9l3-3 2.148 2.148A12.061 12.061 0 0116.5 7.605' },
+      { value: 'fireflies', label: 'Fireflies', icon: 'M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z' },
+      { value: 'waves', label: 'Waves', icon: 'M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5m.75-9l3-3 2.148 2.148A12.061 12.061 0 0116.5 7.605' },
+      { value: 'spiral-galaxy', label: 'Spiral Galaxy', icon: 'M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5m.75-9l3-3 2.148 2.148A12.061 12.061 0 0116.5 7.605' },
+      { value: 'bouncing-orbs', label: 'Bouncing Orbs', icon: 'M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z' },
+      { value: 'nebula-glow', label: 'Nebula Glow', icon: 'M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z' }
+    ];
+
+    // Custom select implementation
+    class CustomSelect {
+      constructor(element, options) {
+        this.element = element;
+        this.options = options;
+        this.selectedValue = options[0].value;
+        this.isOpen = false;
+        this.init();
+      }
+
+      init() {
+        // Create options container
+        const optionsContainer = this.element.querySelector('.select-options');
+        this.options.forEach(option => {
+          const optionElement = document.createElement('div');
+          optionElement.className = 'select-option';
+          optionElement.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="select-option-icon">
+              <path stroke-linecap="round" stroke-linejoin="round" d="${option.icon}" />
+            </svg>
+            <span>${option.label}</span>
+          `;
+          optionElement.dataset.value = option.value;
+          optionElement.addEventListener('click', () => this.selectOption(option));
+          optionsContainer.appendChild(optionElement);
+        });
+
+        // Add click handler to trigger
+        const trigger = this.element.querySelector('.select-trigger');
+        trigger.addEventListener('click', () => this.toggle());
+
+        // Close when clicking outside
+        document.addEventListener('click', (e) => {
+          if (!this.element.contains(e.target)) {
+            this.close();
+          }
+        });
+
+        // Set initial value
+        this.updateSelected();
+      }
+
+      toggle() {
+        this.isOpen ? this.close() : this.open();
+      }
+
+      open() {
+        this.isOpen = true;
+        this.element.querySelector('.select-options').classList.add('open');
+      }
+
+      close() {
+        this.isOpen = false;
+        this.element.querySelector('.select-options').classList.remove('open');
+      }
+
+      selectOption(option) {
+        this.selectedValue = option.value;
+        this.updateSelected();
+        this.close();
+      }
+
+      updateSelected() {
+        const selectedOption = this.options.find(opt => opt.value === this.selectedValue);
+        const selectedIcon = document.getElementById('selected-icon');
+        const selectedText = document.getElementById('selected-text');
+        
+        selectedIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" d="${selectedOption.icon}" />`;
+        selectedText.textContent = selectedOption.label;
+
+        // Update option styles
+        this.element.querySelectorAll('.select-option').forEach(option => {
+          option.classList.toggle('selected', option.dataset.value === this.selectedValue);
+        });
+      }
+
+      getValue() {
+        return this.selectedValue;
+      }
+    }
+
+    // Initialize custom select
+    let customSelect;
+    document.addEventListener('DOMContentLoaded', () => {
+      const selectElement = document.querySelector('.custom-select');
+      customSelect = new CustomSelect(selectElement, animationOptions);
+      loadSettings();
+    });
+
     // Load saved settings
     function loadSettings() {
       const settings = JSON.parse(localStorage.getItem('timerSettings') || '{}');
 
       // Set background animation
-      const backgroundSelect = document.getElementById('background-animation');
-      backgroundSelect.value = settings.backgroundAnimation || 'floating-shapes';
+      if (customSelect) {
+        const option = animationOptions.find(opt => opt.value === (settings.backgroundAnimation || 'floating-shapes'));
+        if (option) {
+          customSelect.selectOption(option);
+        }
+      }
 
       // Set bottom label
       const bottomLabel = document.getElementById('bottom-label');
@@ -121,7 +317,7 @@
     // Save settings
     function saveSettings() {
       const settings = {
-        backgroundAnimation: document.getElementById('background-animation').value,
+        backgroundAnimation: customSelect.getValue(),
         bottomLabel: document.getElementById('bottom-label').value,
         showCurrentTime: document.getElementById('current-time-toggle').getAttribute('aria-checked') === 'true'
       };
@@ -132,10 +328,10 @@
       const button = document.querySelector('button[onclick="saveSettings()"]');
       const originalText = button.innerHTML;
       button.innerHTML = `
-          <span>Settings Saved!</span>
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
+          <span>Settings Saved!</span>
         `;
       button.classList.add('bg-green-600', 'hover:bg-green-700');
       button.classList.remove('bg-blue-600', 'hover:bg-blue-700');
@@ -146,9 +342,6 @@
         button.classList.add('bg-blue-600', 'hover:bg-blue-700');
       }, 2000);
     }
-
-    // Load settings when page loads
-    document.addEventListener('DOMContentLoaded', loadSettings);
   </script>
 </body>
 
