@@ -73,7 +73,8 @@ bool setup_temp_directory() {
     if (!extract_resource(IDR_SETUP_HTML, L"setup.html") ||
         !extract_resource(IDR_COUNTDOWN_HTML, L"countdown.html") ||
         !extract_resource(IDR_SETTINGS_HTML, L"settings.html") ||
-        !extract_resource(IDR_TAILWIND_JS, L"tailwind.js")) {
+        !extract_resource(IDR_TAILWIND_JS, L"tailwind.js") ||
+        !extract_resource(IDR_ICON_ICO, L"icon.ico")) {
         log("Error: Failed to extract resources");
         return false;
     }
@@ -242,6 +243,18 @@ void run_server() {
         if (file) {
             std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
             res.set_content(content, "application/javascript");
+        }
+        else {
+            res.status = 500;
+            res.set_content("Internal Server Error", "text/plain");
+        }
+    });
+
+    svr.Get("/icon.ico", [&](const httplib::Request&, httplib::Response& res) {
+        std::ifstream file(temp_dir_str + "\\icon.ico", std::ios::binary);
+        if (file) {
+            std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+            res.set_content(content, "image/x-icon");
         }
         else {
             res.status = 500;
