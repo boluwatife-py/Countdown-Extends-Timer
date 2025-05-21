@@ -1,0 +1,3 @@
+"C:\Program Files\CMake\bin\cmake.exe" -E rm -f CMakeFiles\TimerServer.dir/objects.a
+C:\msys64\ucrt64\bin\ar.exe qc CMakeFiles\TimerServer.dir/objects.a @CMakeFiles\TimerServer.dir\objects1.rsp
+C:\msys64\ucrt64\bin\c++.exe  -static-libgcc -static-libstdc++  -static -static-libgcc -static-libstdc++ -s -mwindows -Wl,--whole-archive CMakeFiles\TimerServer.dir/objects.a -Wl,--no-whole-archive -o TimerServer.exe -Wl,--out-implib,libTimerServer.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\TimerServer.dir\linkLibs.rsp

@@ -1,0 +1,3 @@
+C:/Users/BOLUWATIFE/Desktop/timer/build/CMakeFiles/TimerServer.dir
+C:/Users/BOLUWATIFE/Desktop/timer/build/CMakeFiles/edit_cache.dir
+C:/Users/BOLUWATIFE/Desktop/timer/build/CMakeFiles/rebuild_cache.dir
